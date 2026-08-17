@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — The Gadget Grid</title>
+<meta name="description" content="Browse phones, accessories, audio and everyday tech at The Gadget Grid, GNS Plaza, Old Kampala.">
+<link rel="icon" href="assets/logo.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-grid">
+
+<header class="site-header">
+  <div class="nav">
+    <a href="index.html" class="brand">
+      <img src="assets/logo.png" alt="The Gadget Grid logo">
+      <div class="brand-name">The Gadget Grid<small>Smarter Tech · Better Living</small></div>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="shop.html" class="active">Shop</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <button class="icon-btn" id="cartOpenBtn" aria-label="Open cart">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-badge" style="display:none">0</span>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a> / Shop</div>
+    <h1>The <span class="accent">Shop</span></h1>
+    <p style="color:var(--text-2); max-width:520px; margin:14px auto 0;">Browse our full range of phones, accessories and tech — add what you need and check out to WhatsApp.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:20px;">
+  <div class="container">
+    <div class="shop-toolbar">
+      <div class="search-box">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Search products…">
+      </div>
+      <div class="filter-pills" id="filterPills"></div>
+    </div>
+
+    <div class="grid-products" id="shopGrid">
+      <div class="empty-state">Loading products…</div>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand">
+          <img src="assets/logo.png" alt="The Gadget Grid logo" style="width:44px;height:44px;">
+          <div class="brand-name">The Gadget Grid<small>Smarter Tech · Better Living</small></div>
+        </div>
+        <p>Your neighbourhood spot for phones, accessories and everyday tech — genuine products, honest prices.</p>
+        <div class="social-row">
+          <a class="icon-btn" href="https://www.tiktok.com/@thegadget.grid" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.82s.51.5 0 0A4.278 4.278 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 1 1-2.59-2.59c.27 0 .53.04.77.12V9.94a5.89 5.89 0 0 0-.77-.05A5.89 5.89 0 1 0 15.68 15.4V9.13a7.14 7.14 0 0 0 4.16 1.34V7.4a4.278 4.278 0 0 1-3.24-1.58z"/></svg>
+          </a>
+          <a class="icon-btn" href="https://wa.me/256794776220" target="_blank" rel="noopener" data-whatsapp-link aria-label="WhatsApp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.48 1.32 5L2 22l5.24-1.38a9.9 9.9 0 0 0 4.8 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0 0 12.04 2m0 1.67a8.23 8.23 0 0 1 8.23 8.24c0 4.54-3.7 8.23-8.24 8.23a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.11.82.83-3.03-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24m4.72 11.02c-.09-.15-.33-.24-.68-.42-.36-.18-2.1-1.04-2.42-1.16-.33-.12-.57-.18-.8.18-.24.36-.92 1.16-1.13 1.4-.21.24-.42.27-.77.09-.36-.18-1.5-.56-2.86-1.78-1.06-.94-1.77-2.11-1.98-2.47-.21-.36-.02-.55.16-.73.16-.16.36-.42.55-.63.18-.21.24-.36.36-.6.12-.24.06-.45-.03-.63-.09-.18-.8-1.94-1.1-2.66-.29-.7-.58-.6-.8-.61-.21-.01-.45-.01-.69-.01-.24 0-.63.09-.96.45-.33.36-1.26 1.23-1.26 3s1.29 3.48 1.47 3.72c.18.24 2.54 3.88 6.16 5.44.86.37 1.53.6 2.05.76.86.27 1.65.24 2.27.14.69-.1 2.1-.86 2.4-1.69.3-.83.3-1.54.21-1.69z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="shop.html">All Products</a></li>
+          <li><a href="shop.html?cat=Phones">Phones</a></li>
+          <li><a href="shop.html?cat=Accessories">Accessories</a></li>
+          <li><a href="shop.html?cat=Audio">Audio</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Get In Touch</h4>
+        <ul>
+          <li>GNS Plaza, Old Kampala</li>
+          <li><a href="tel:0794776220">0794 776 220</a></li>
+          <li><a href="https://wa.me/256794776220" data-whatsapp-link>WhatsApp Us</a></li>
+          <li><a href="https://www.tiktok.com/@thegadget.grid" target="_blank" rel="noopener">@thegadget.grid</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> The Gadget Grid. All rights reserved.</span>
+      <span>GNS Plaza, Old Kampala, Kampala</span>
+    </div>
+  </div>
+</footer>
+
+<div class="overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <h3>Your Cart</h3>
+    <button class="cart-close" id="cartCloseBtn">&times;</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-foot">
+    <div class="cart-total-row"><span>Total</span><span id="cartTotal">UGX 0</span></div>
+    <a href="checkout.html" class="btn btn-primary btn-block">Checkout</a>
+  </div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script src="js/config.js"></script>
+<script src="js/products.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/ui.js"></script>
+<script>
+  let ALL_PRODUCTS = [];
+  let ACTIVE_CATEGORY = "All";
+
+  function getParam(name) {
+    return new URLSearchParams(window.location.search).get(name);
+  }
+
+  async function initShop() {
+    ALL_PRODUCTS = await loadProducts();
+    registerProducts(ALL_PRODUCTS);
+
+    const categories = ["All", ...Array.from(new Set(ALL_PRODUCTS.map(p => p.category))).sort()];
+    const fromUrl = getParam("cat");
+    if (fromUrl && categories.includes(fromUrl)) ACTIVE_CATEGORY = fromUrl;
+
+    document.getElementById("filterPills").innerHTML = categories.map(c =>
+      `<button class="pill ${c === ACTIVE_CATEGORY ? "active" : ""}" data-cat="${c}">${c}</button>`
+    ).join("");
+
+    document.querySelectorAll(".pill").forEach(btn => {
+      btn.addEventListener("click", () => {
+        ACTIVE_CATEGORY = btn.getAttribute("data-cat");
+        document.querySelectorAll(".pill").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderShopGrid();
+      });
+    });
+
+    document.getElementById("searchInput").addEventListener("input", renderShopGrid);
+
+    renderShopGrid();
+  }
+
+  function renderShopGrid() {
+    const query = (document.getElementById("searchInput").value || "").toLowerCase().trim();
+    let list = ALL_PRODUCTS;
+    if (ACTIVE_CATEGORY !== "All") list = list.filter(p => p.category === ACTIVE_CATEGORY);
+    if (query) list = list.filter(p =>
+      p.name.toLowerCase().includes(query) || (p.description || "").toLowerCase().includes(query)
+    );
+
+    const grid = document.getElementById("shopGrid");
+    if (!list.length) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">No products match your search. Try a different keyword or category.</div>`;
+      return;
+    }
+    grid.innerHTML = list.map(productCardHTML).join("");
+  }
+
+  initShop();
+</script>
+</body>
+</html>
