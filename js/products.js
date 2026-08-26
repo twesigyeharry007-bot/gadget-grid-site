@@ -105,9 +105,9 @@ const PLACEHOLDER_IMG =
   "data:image/svg+xml;utf8," +
   encodeURIComponent(`
   <svg xmlns="http://www.w3.org/2000/svg" width="300" height="300">
-    <rect width="300" height="300" fill="#0a1330"/>
-    <circle cx="150" cy="120" r="46" fill="none" stroke="#2a4570" stroke-width="6"/>
-    <path d="M70 230 L120 160 L160 200 L200 150 L240 230 Z" fill="none" stroke="#2a4570" stroke-width="6" stroke-linejoin="round"/>
+    <rect width="300" height="300" fill="#f6f8fc"/>
+    <circle cx="150" cy="120" r="46" fill="none" stroke="#c7d3e6" stroke-width="6"/>
+    <path d="M70 230 L120 160 L160 200 L200 150 L240 230 Z" fill="none" stroke="#c7d3e6" stroke-width="6" stroke-linejoin="round"/>
   </svg>`);
 
 // ---- CSV parsing (handles quoted commas) ---------------------------------
