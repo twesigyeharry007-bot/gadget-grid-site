@@ -196,13 +196,13 @@ function productCardHTML(p) {
   const outOfStock = p.stock === "no";
   return `
     <div class="card">
-      <div class="card-media">
+      <div class="card-media" onclick="openQuickView('${p.id}')">
         ${outOfStock ? '<span class="badge out">Out of Stock</span>' : (p.oldPrice ? '<span class="badge">Sale</span>' : '')}
         <img src="${img}" alt="${escapeHTML(p.name)}" loading="lazy">
       </div>
       <div class="card-body">
         <div class="card-cat">${escapeHTML(p.category)}</div>
-        <div class="card-title">${escapeHTML(p.name)}</div>
+        <div class="card-title" onclick="openQuickView('${p.id}')">${escapeHTML(p.name)}</div>
         <div class="card-desc">${escapeHTML(p.description || "")}</div>
         <div class="card-foot">
           <div class="price">${p.oldPrice ? `<span class="old">${formatPrice(p.oldPrice)}</span>` : ""}${formatPrice(p.price)}</div>
