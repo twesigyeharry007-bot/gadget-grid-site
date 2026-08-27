@@ -43,18 +43,56 @@
 </section>
 
 <section class="section" style="padding-top:20px;">
-  <div class="container">
-    <div class="shop-toolbar">
-      <div class="search-box">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchInput" placeholder="Search products…">
+  <div class="container shop-layout">
+
+    <aside class="shop-sidebar" id="shopSidebar">
+      <div class="sidebar-head">
+        <h3>Filters</h3>
+        <button class="link-btn" id="clearFiltersBtn">Clear all</button>
       </div>
-      <div class="filter-pills" id="filterPills"></div>
+
+      <div class="filter-group">
+        <h4>Category</h4>
+        <div class="filter-list" id="categoryFilters"></div>
+      </div>
+
+      <div class="filter-group" id="brandFilterGroup">
+        <h4>Brand</h4>
+        <div class="filter-list" id="brandFilters"></div>
+      </div>
+
+      <div class="filter-group">
+        <h4>Price Range (UGX)</h4>
+        <div class="price-inputs">
+          <input type="number" inputmode="numeric" id="minPriceInput" placeholder="Min" min="0">
+          <span>–</span>
+          <input type="number" inputmode="numeric" id="maxPriceInput" placeholder="Max" min="0">
+        </div>
+        <div class="price-chips" id="priceChips"></div>
+      </div>
+    </aside>
+
+    <div class="shop-main">
+      <div class="shop-toolbar">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Search products…">
+        </div>
+        <button class="btn btn-outline btn-sm mobile-filter-toggle" id="mobileFilterToggle">Filters</button>
+        <select class="sort-select" id="sortSelect">
+          <option value="featured">Featured First</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name-asc">Name: A–Z</option>
+        </select>
+        <div class="shop-result-count" id="resultCount"></div>
+      </div>
+
+      <div class="grid-products" id="shopGrid">
+        <div class="empty-state">Loading products…</div>
+      </div>
     </div>
 
-    <div class="grid-products" id="shopGrid">
-      <div class="empty-state">Loading products…</div>
-    </div>
   </div>
 </section>
 
@@ -122,7 +160,30 @@
 <script src="js/ui.js"></script>
 <script>
   let ALL_PRODUCTS = [];
-  let ACTIVE_CATEGORY = "All";
+  const SELECTED_CATEGORIES = new Set();
+  const SELECTED_BRANDS = new Set();
+
+  // Known brand keywords, checked against each product name (order matters —
+  // more specific brands first). Anything left over is bucketed as "Other".
+  const BRAND_KEYWORDS = [
+    ["iphone", "Apple"], ["samsung", "Samsung"], ["tecno", "Tecno"], ["infinix", "Infinix"],
+    ["itel", "itel"], ["redmi", "Xiaomi"], ["poco", "Xiaomi"], ["xiaomi", "Xiaomi"], ["oppo", "OPPO"],
+    ["jbl", "JBL"], ["anker", "Anker"], ["oraimo", "Oraimo"], ["sandisk", "SanDisk"],
+    ["besundy", "Besundy"], ["goojprt", "GOOJPRT"], ["xdobo", "XDOBO"], ["boombest", "Boombest"]
+  ];
+  function detectBrand(name) {
+    const lower = (name || "").toLowerCase();
+    for (const [kw, label] of BRAND_KEYWORDS) if (lower.includes(kw)) return label;
+    return "Other";
+  }
+
+  const PRICE_CHIPS = [
+    { label: "Under 50k", min: "", max: 50000 },
+    { label: "50k–150k", min: 50000, max: 150000 },
+    { label: "150k–400k", min: 150000, max: 400000 },
+    { label: "400k–800k", min: 400000, max: 800000 },
+    { label: "Over 800k", min: 800000, max: "" }
+  ];
 
   function getParam(name) {
     return new URLSearchParams(window.location.search).get(name);
@@ -131,40 +192,135 @@
   async function initShop() {
     ALL_PRODUCTS = await loadProducts();
     registerProducts(ALL_PRODUCTS);
+    ALL_PRODUCTS.forEach(p => { p.brand = detectBrand(p.name); });
 
-    const categories = ["All", ...Array.from(new Set(ALL_PRODUCTS.map(p => p.category))).sort()];
+    // Categories -------------------------------------------------------
+    const categories = Array.from(new Set(ALL_PRODUCTS.map(p => p.category))).sort();
     const fromUrl = getParam("cat");
-    if (fromUrl && categories.includes(fromUrl)) ACTIVE_CATEGORY = fromUrl;
+    if (fromUrl && categories.includes(fromUrl)) SELECTED_CATEGORIES.add(fromUrl);
 
-    document.getElementById("filterPills").innerHTML = categories.map(c =>
-      `<button class="pill ${c === ACTIVE_CATEGORY ? "active" : ""}" data-cat="${c}">${c}</button>`
-    ).join("");
+    document.getElementById("categoryFilters").innerHTML = categories.map(c => {
+      const count = ALL_PRODUCTS.filter(p => p.category === c).length;
+      return filterCheckHTML("cat", c, c, count, SELECTED_CATEGORIES.has(c));
+    }).join("");
 
-    document.querySelectorAll(".pill").forEach(btn => {
-      btn.addEventListener("click", () => {
-        ACTIVE_CATEGORY = btn.getAttribute("data-cat");
-        document.querySelectorAll(".pill").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
+    // Brands -------------------------------------------------------------
+    const brands = Array.from(new Set(ALL_PRODUCTS.map(p => p.brand))).sort((a, b) => {
+      if (a === "Other") return 1;
+      if (b === "Other") return -1;
+      return a.localeCompare(b);
+    });
+    const brandGroup = document.getElementById("brandFilterGroup");
+    if (brands.length < 2) {
+      brandGroup.style.display = "none";
+    } else {
+      document.getElementById("brandFilters").innerHTML = brands.map(b => {
+        const count = ALL_PRODUCTS.filter(p => p.brand === b).length;
+        return filterCheckHTML("brand", b, b, count, SELECTED_BRANDS.has(b));
+      }).join("");
+    }
+
+    document.querySelectorAll('#categoryFilters input[type=checkbox]').forEach(cb => {
+      cb.addEventListener("change", () => {
+        toggleSetValue(SELECTED_CATEGORIES, cb.value, cb.checked);
+        renderShopGrid();
+      });
+    });
+    document.querySelectorAll('#brandFilters input[type=checkbox]').forEach(cb => {
+      cb.addEventListener("change", () => {
+        toggleSetValue(SELECTED_BRANDS, cb.value, cb.checked);
         renderShopGrid();
       });
     });
 
+    // Price ----------------------------------------------------------------
+    document.getElementById("priceChips").innerHTML = PRICE_CHIPS.map((p, i) =>
+      `<button class="chip" type="button" data-min="${p.min}" data-max="${p.max}">${p.label}</button>`
+    ).join("");
+    document.querySelectorAll("#priceChips .chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        const isActive = chip.classList.contains("active");
+        document.querySelectorAll("#priceChips .chip").forEach(c => c.classList.remove("active"));
+        document.getElementById("minPriceInput").value = isActive ? "" : chip.getAttribute("data-min");
+        document.getElementById("maxPriceInput").value = isActive ? "" : chip.getAttribute("data-max");
+        if (!isActive) chip.classList.add("active");
+        renderShopGrid();
+      });
+    });
+    document.getElementById("minPriceInput").addEventListener("input", () => {
+      document.querySelectorAll("#priceChips .chip").forEach(c => c.classList.remove("active"));
+      renderShopGrid();
+    });
+    document.getElementById("maxPriceInput").addEventListener("input", () => {
+      document.querySelectorAll("#priceChips .chip").forEach(c => c.classList.remove("active"));
+      renderShopGrid();
+    });
+
     document.getElementById("searchInput").addEventListener("input", renderShopGrid);
+
+    document.getElementById("clearFiltersBtn").addEventListener("click", () => {
+      SELECTED_CATEGORIES.clear();
+      SELECTED_BRANDS.clear();
+      document.querySelectorAll('#categoryFilters input, #brandFilters input').forEach(cb => cb.checked = false);
+      document.querySelectorAll("#priceChips .chip").forEach(c => c.classList.remove("active"));
+      document.getElementById("minPriceInput").value = "";
+      document.getElementById("maxPriceInput").value = "";
+      document.getElementById("searchInput").value = "";
+      renderShopGrid();
+    });
+
+    document.getElementById("mobileFilterToggle").addEventListener("click", () => {
+      document.getElementById("shopSidebar").classList.toggle("open");
+    });
+
+    document.getElementById("sortSelect").addEventListener("change", renderShopGrid);
 
     renderShopGrid();
   }
 
+  function sortProducts(list, mode) {
+    const sorted = list.slice();
+    if (mode === "price-asc") sorted.sort((a, b) => a.price - b.price);
+    else if (mode === "price-desc") sorted.sort((a, b) => b.price - a.price);
+    else if (mode === "name-asc") sorted.sort((a, b) => a.name.localeCompare(b.name));
+    else sorted.sort((a, b) => (b.featured === "yes") - (a.featured === "yes")); // featured first, stable otherwise
+    return sorted;
+  }
+
+  function filterCheckHTML(group, value, label, count, checked) {
+    return `
+      <label class="filter-check">
+        <input type="checkbox" name="${group}" value="${escapeHTML(value)}" ${checked ? "checked" : ""}>
+        <span>${escapeHTML(label)}</span>
+        <span class="count">${count}</span>
+      </label>`;
+  }
+
+  function toggleSetValue(set, value, on) {
+    if (on) set.add(value); else set.delete(value);
+  }
+
   function renderShopGrid() {
     const query = (document.getElementById("searchInput").value || "").toLowerCase().trim();
+    const minPrice = parseFloat(document.getElementById("minPriceInput").value);
+    const maxPrice = parseFloat(document.getElementById("maxPriceInput").value);
+
     let list = ALL_PRODUCTS;
-    if (ACTIVE_CATEGORY !== "All") list = list.filter(p => p.category === ACTIVE_CATEGORY);
+    if (SELECTED_CATEGORIES.size) list = list.filter(p => SELECTED_CATEGORIES.has(p.category));
+    if (SELECTED_BRANDS.size) list = list.filter(p => SELECTED_BRANDS.has(p.brand));
+    if (!isNaN(minPrice)) list = list.filter(p => p.price >= minPrice);
+    if (!isNaN(maxPrice)) list = list.filter(p => p.price <= maxPrice);
     if (query) list = list.filter(p =>
       p.name.toLowerCase().includes(query) || (p.description || "").toLowerCase().includes(query)
     );
+    list = sortProducts(list, document.getElementById("sortSelect").value);
+
+    document.getElementById("resultCount").textContent =
+      list.length + (list.length === 1 ? " product" : " products");
 
     const grid = document.getElementById("shopGrid");
     if (!list.length) {
-      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">No products match your search. Try a different keyword or category.</div>`;
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">No products match your filters. Try clearing a filter or a different keyword.</div>`;
       return;
     }
     grid.innerHTML = list.map(productCardHTML).join("");
