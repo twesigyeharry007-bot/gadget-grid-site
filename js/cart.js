@@ -69,6 +69,40 @@ function updateCartBadge() {
     el.textContent = count;
     el.style.display = count > 0 ? "flex" : "none";
   });
+  updateMobileCartBar();
+}
+
+// ---- Sticky mobile cart bar (present on every page except checkout itself,
+// mobile widths only — see .mobile-cart-bar.show in style.css) ------------
+function ensureMobileCartBar() {
+  const existing = document.getElementById("mobileCartBar");
+  if (existing) return existing;
+  if (document.getElementById("checkoutContent")) return null; // don't show it on the checkout page itself
+  const bar = document.createElement("button");
+  bar.id = "mobileCartBar";
+  bar.className = "mobile-cart-bar";
+  bar.type = "button";
+  bar.innerHTML = `
+    <span class="mcb-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    </span>
+    <span class="mcb-text"><span id="mcbCount">0 items</span> · <span id="mcbTotal">UGX 0</span></span>
+    <span class="mcb-cta">View Cart</span>`;
+  bar.addEventListener("click", () => { if (typeof openCart === "function") openCart(); });
+  document.body.appendChild(bar);
+  return bar;
+}
+
+function updateMobileCartBar() {
+  if (document.readyState === "loading") return; // body not ready yet
+  const bar = ensureMobileCartBar();
+  if (!bar) return; // suppressed on the checkout page
+  const count = cartCount();
+  const countEl = document.getElementById("mcbCount");
+  const totalEl = document.getElementById("mcbTotal");
+  if (countEl) countEl.textContent = count + (count === 1 ? " item" : " items");
+  if (totalEl) totalEl.textContent = formatPrice(cartTotal());
+  bar.classList.toggle("show", count > 0);
 }
 
 // ---- Cart drawer UI (present on every page) --------------------------------
