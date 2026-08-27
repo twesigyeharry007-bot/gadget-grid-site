@@ -25,5 +25,5 @@ const SITE_CONFIG = {
   // Example:
   // sheetCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-XXXXXXX/pub?output=csv"
   //
-  sheetCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSjciTC7QXS0E07J6v-BoxDstgvmVImcokzfMaAn90uV5xoUd5zA0peWsWDXRCeX6S93FYQgrKhZUOl/pub?gid=454400790&single=true&output=csv"
+  sheetCsvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSCpKSYlUEeWY_eXAfX8Ro4hxKni6I04bwRtj0kfRiwAi5MEAd-HcxhUhE5NG3gvKvkIFLeS5ejboIY/pub?gid=871292714&single=true&output=csv"
 };
