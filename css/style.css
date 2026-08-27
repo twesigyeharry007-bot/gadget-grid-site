@@ -295,6 +295,111 @@ h1,h2,h3,h4{
 
 .empty-state{ text-align:center; padding:70px 20px; color:var(--text-2); }
 
+/* shop sidebar --------------------------------------------------------------- */
+.shop-layout{ display:grid; grid-template-columns:260px 1fr; gap:32px; align-items:start; }
+.shop-sidebar{
+  display:flex; flex-direction:column; gap:26px;
+  padding:22px; position:sticky; top:96px;
+  border:1px solid var(--border); border-radius:var(--radius);
+  background:linear-gradient(180deg, var(--panel), var(--panel-2));
+  box-shadow:0 2px 10px rgba(20,40,80,0.05);
+}
+.sidebar-head{ display:flex; align-items:center; justify-content:space-between; }
+.sidebar-head h3{ font-size:16px; margin:0; }
+.link-btn{ background:none; border:none; padding:0; color:var(--cyan); font-size:12.5px; font-weight:700; }
+.link-btn:hover{ text-decoration:underline; }
+.filter-group h4{
+  font-family:'Sora',sans-serif; font-size:12px; text-transform:uppercase; letter-spacing:1.3px;
+  color:var(--text-2); margin:0 0 12px;
+}
+.filter-list{ display:flex; flex-direction:column; gap:1px; }
+.filter-check{
+  display:flex; align-items:center; gap:10px;
+  padding:7px 8px; margin:0 -8px;
+  border-radius:8px; font-size:13.5px; color:var(--text-1);
+  cursor:pointer; user-select:none;
+}
+.filter-check:hover{ background:var(--bg-1); }
+.filter-check input{ accent-color:var(--blue); width:15px; height:15px; flex-shrink:0; }
+.filter-check .count{ margin-left:auto; color:var(--text-2); font-size:11.5px; }
+.price-inputs{ display:flex; align-items:center; gap:8px; }
+.price-inputs input{
+  width:100%; min-width:0;
+  background:#ffffff; border:1px solid var(--border); border-radius:8px;
+  padding:9px 10px; font-size:13px; color:var(--text-0); outline:none;
+}
+.price-inputs input:focus{ border-color:var(--border-strong); }
+.price-inputs span{ color:var(--text-2); }
+.price-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+.chip{
+  padding:6px 12px; border-radius:999px; border:1px solid var(--border);
+  background:#ffffff; color:var(--text-1); font-size:11.5px; font-weight:600;
+}
+.chip.active{ border-color:var(--border-strong); background:rgba(47,168,255,0.10); color:#0a83c9; }
+.mobile-filter-toggle{ display:none; }
+.shop-result-count{ color:var(--text-2); font-size:13.5px; font-weight:600; white-space:nowrap; margin-left:auto; }
+.sort-select{
+  background:#ffffff; border:1px solid var(--border); border-radius:10px;
+  padding:10px 14px; font-size:13.5px; font-weight:600; color:var(--text-1);
+  font-family:inherit; outline:none; cursor:pointer;
+}
+.sort-select:focus{ border-color:var(--border-strong); }
+
+/* product cards are now clickable (opens quick-view) ------------------------ */
+.card-media, .card-title{ cursor:pointer; }
+
+/* quick-view modal --------------------------------------------------------- */
+.quickview-modal{
+  position:fixed; top:50%; left:50%; z-index:230;
+  width:92vw; max-width:600px; max-height:86vh; overflow-y:auto;
+  background:var(--panel); border-radius:20px;
+  box-shadow:0 30px 70px rgba(20,40,80,0.28);
+  transform:translate(-50%,-50%) scale(.96); opacity:0; pointer-events:none;
+  transition:opacity .2s ease, transform .2s ease;
+}
+.quickview-modal.open{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
+.quickview-close{
+  position:absolute; top:14px; right:14px; z-index:2;
+  width:34px; height:34px; border-radius:50%; border:1px solid var(--border);
+  background:#ffffff; color:var(--text-0); font-size:20px; line-height:1;
+  display:flex; align-items:center; justify-content:center;
+}
+.quickview-media{
+  position:relative; aspect-ratio:16/10; display:flex; align-items:center; justify-content:center;
+  background:var(--bg-1); border-radius:20px 20px 0 0; padding:30px;
+}
+.quickview-media img{ max-height:100%; max-width:70%; object-fit:contain; filter:drop-shadow(0 16px 24px rgba(20,40,80,0.18)); }
+.quickview-info{ padding:24px 26px 28px; }
+.quickview-info h3{ font-size:22px; margin:6px 0 10px; }
+.quickview-desc{ color:var(--text-2); font-size:14.5px; line-height:1.6; margin:0 0 16px; }
+.quickview-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:18px; }
+.quickview-actions .btn{ flex:1; min-width:160px; }
+
+/* floating WhatsApp button --------------------------------------------------- */
+.whatsapp-fab{
+  position:fixed; right:22px; bottom:22px; z-index:150;
+  width:56px; height:56px; border-radius:50%;
+  background:#25D366; color:#ffffff;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 12px 26px rgba(37,211,102,0.4);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.whatsapp-fab:hover{ transform:translateY(-2px); box-shadow:0 16px 34px rgba(37,211,102,0.5); }
+
+/* sticky mobile cart bar ----------------------------------------------------- */
+.mobile-cart-bar{
+  display:none;
+  position:fixed; left:12px; right:12px; bottom:14px; z-index:140;
+  align-items:center; gap:12px;
+  padding:14px 18px; border:none; border-radius:14px;
+  background:linear-gradient(90deg,#2fb8ff,#7f7bff); color:#ffffff;
+  font-family:'Sora',sans-serif;
+  box-shadow:0 16px 34px rgba(47,140,255,0.35);
+}
+.mcb-icon{ display:flex; }
+.mcb-text{ font-size:13.5px; font-weight:600; flex:1; text-align:left; }
+.mcb-cta{ font-size:13px; font-weight:800; text-decoration:underline; white-space:nowrap; }
+
 /* about / info panels --------------------------------------------------------------- */
 .panel-grid{
   display:grid;
@@ -440,6 +545,20 @@ h1,h2,h3,h4{
   .footer-grid{ grid-template-columns:1fr 1fr; }
   .checkout-grid{ grid-template-columns:1fr; }
   .summary-card{ position:static; }
+
+  .shop-layout{ grid-template-columns:1fr; }
+  .mobile-filter-toggle{ display:inline-flex; }
+  .shop-sidebar{
+    display:none;
+    position:static;
+    margin-bottom:24px;
+  }
+  .shop-sidebar.open{ display:flex; }
+
+  .mobile-cart-bar.show{ display:flex; }
+  .whatsapp-fab{ bottom:92px; width:50px; height:50px; } /* clears the mobile cart bar when both are visible */
+  .quickview-media{ aspect-ratio:4/3; padding:20px; }
+  .quickview-actions .btn{ min-width:130px; }
 }
 @media (max-width:760px){
   .nav-links{
